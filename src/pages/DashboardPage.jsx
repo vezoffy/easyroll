@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { getLeaveRequests, submitLeaveRequest } from '../services/leaveService';
 import { getPayrolls } from '../services/payrollService';
+import AuthNavbar from '../components/auth/AuthNavbar';
 import {
   Container,
   Box,
@@ -91,150 +92,153 @@ const DashboardPage = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="h4" component="h1">Dashboard</Typography>
-        <Button variant="contained" color="secondary" onClick={logout}>Logout</Button>
-      </Box>
+    <>
+    
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h1">Dashboard</Typography>
+          <Button variant="contained" color="secondary" onClick={logout}>Logout</Button>
+        </Box>
 
-      <Paper sx={{ p: 3, mb: 4 }}>
-        <Typography variant="h5" component="h2" gutterBottom>
-          Welcome, {user.firstName} {user.lastName}!
-        </Typography>
-        <Typography><strong>Email:</strong> {user.email}</Typography>
-        <Typography><strong>Designation:</strong> {user.designation}</Typography>
-      </Paper>
+        <Paper sx={{ p: 3, mb: 4 }}>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Welcome, {user.firstName} {user.lastName}!
+          </Typography>
+          <Typography><strong>Email:</strong> {user.email}</Typography>
+          <Typography><strong>Designation:</strong> {user.designation}</Typography>
+        </Paper>
 
-      {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}><CircularProgress /></Box>
-      ) : error ? (
-        <Alert severity="error">{error}</Alert>
-      ) : (
-        <Grid container spacing={4}>
-          {/* Leave Request Form */}
-          <Grid item xs={12}>
-            <Paper sx={{ p: 3, height: '100%' }}>
-              <Typography variant="h6" gutterBottom>Submit Leave Request</Typography>
-              <Box component="form" onSubmit={handleLeaveSubmit} noValidate sx={{ mt: 1 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="start-date"
-                      label="Start Date"
-                      type="date"
-                      InputLabelProps={{ shrink: true }}
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                    />
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}><CircularProgress /></Box>
+        ) : error ? (
+          <Alert severity="error">{error}</Alert>
+        ) : (
+          <Grid container spacing={4}>
+            {/* Leave Request Form */}
+            <Grid item xs={12}>
+              <Paper sx={{ p: 3, height: '100%' }}>
+                <Typography variant="h6" gutterBottom>Submit Leave Request</Typography>
+                <Box component="form" onSubmit={handleLeaveSubmit} noValidate sx={{ mt: 1 }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="start-date"
+                        label="Start Date"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="end-date"
+                        label="End Date"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="reason"
+                        label="Reason for Leave"
+                        multiline
+                        rows={4}
+                        value={reason}
+                        onChange={(e) => setReason(e.target.value)}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="end-date"
-                      label="End Date"
-                      type="date"
-                      InputLabelProps={{ shrink: true }}
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="reason"
-                      label="Reason for Leave"
-                      multiline
-                      rows={4}
-                      value={reason}
-                      onChange={(e) => setReason(e.target.value)}
-                    />
-                  </Grid>
-                </Grid>
-                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                  Submit Request
-                </Button>
-              </Box>
-            </Paper>
-          </Grid>
+                  <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                    Submit Request
+                  </Button>
+                </Box>
+              </Paper>
+            </Grid>
 
-          {/* Leave Requests Table */}
-          <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>Your Leave Requests</Typography>
-              {leaveRequests.length === 0 ? (
-                <Typography>No leave requests found.</Typography>
-              ) : (
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Start Date</TableCell>
-                        <TableCell>End Date</TableCell>
-                        <TableCell>Reason</TableCell>
-                        <TableCell>Status</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {leaveRequests.map((req) => (
-                        <TableRow key={req.id}>
-                          <TableCell>{new Date(req.startDate).toLocaleDateString()}</TableCell>
-                          <TableCell>{new Date(req.endDate).toLocaleDateString()}</TableCell>
-                          <TableCell>{req.reason}</TableCell>
-                          <TableCell>{req.status}</TableCell>
+            {/* Leave Requests Table */}
+            <Grid item xs={12}>
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom>Your Leave Requests</Typography>
+                {leaveRequests.length === 0 ? (
+                  <Typography>No leave requests found.</Typography>
+                ) : (
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Start Date</TableCell>
+                          <TableCell>End Date</TableCell>
+                          <TableCell>Reason</TableCell>
+                          <TableCell>Status</TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              )}
-            </Paper>
-          </Grid>
+                      </TableHead>
+                      <TableBody>
+                        {leaveRequests.map((req) => (
+                          <TableRow key={req.id}>
+                            <TableCell>{new Date(req.startDate).toLocaleDateString()}</TableCell>
+                            <TableCell>{new Date(req.endDate).toLocaleDateString()}</TableCell>
+                            <TableCell>{req.reason}</TableCell>
+                            <TableCell>{req.status}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </Paper>
+            </Grid>
 
-          {/* Payroll History Table */}
-          <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>Your Payroll History</Typography>
-              {payrolls.length === 0 ? (
-                <Typography>No payroll history found.</Typography>
-              ) : (
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Pay Period</TableCell>
-                        <TableCell>Payment Date</TableCell>
-                        <TableCell>Basic Salary</TableCell>
-                        <TableCell>HRA</TableCell>
-                        <TableCell>Allowances</TableCell>
-                        <TableCell>Deductions</TableCell>
-                        <TableCell>Net Pay</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {payrolls.map((p) => (
-                        <TableRow key={p.id}>
-                          <TableCell>{p.payPeriod}</TableCell>
-                          <TableCell>{new Date(p.paymentDate).toLocaleDateString()}</TableCell>
-                          <TableCell>${p.basicSalary?.toFixed(2)}</TableCell>
-                          <TableCell>${p.hra?.toFixed(2)}</TableCell>
-                          <TableCell>${p.allowances?.toFixed(2)}</TableCell>
-                          <TableCell>${p.deductions?.toFixed(2)}</TableCell>
-                          <TableCell>${p.netPay?.toFixed(2)}</TableCell>
+            {/* Payroll History Table */}
+            <Grid item xs={12}>
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom>Your Payroll History</Typography>
+                {payrolls.length === 0 ? (
+                  <Typography>No payroll history found.</Typography>
+                ) : (
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Pay Period</TableCell>
+                          <TableCell>Payment Date</TableCell>
+                          <TableCell>Basic Salary</TableCell>
+                          <TableCell>HRA</TableCell>
+                          <TableCell>Allowances</TableCell>
+                          <TableCell>Deductions</TableCell>
+                          <TableCell>Net Pay</TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              )}
-            </Paper>
+                      </TableHead>
+                      <TableBody>
+                        {payrolls.map((p) => (
+                          <TableRow key={p.id}>
+                            <TableCell>{p.payPeriod}</TableCell>
+                            <TableCell>{new Date(p.paymentDate).toLocaleDateString()}</TableCell>
+                            <TableCell>${p.basicSalary?.toFixed(2)}</TableCell>
+                            <TableCell>${p.hra?.toFixed(2)}</TableCell>
+                            <TableCell>${p.allowances?.toFixed(2)}</TableCell>
+                            <TableCell>${p.deductions?.toFixed(2)}</TableCell>
+                            <TableCell>${p.netPay?.toFixed(2)}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </Paper>
+            </Grid>
           </Grid>
-        </Grid>
-      )}
-    </Container>
+        )}
+      </Container>
+    </>
   );
 };
 
