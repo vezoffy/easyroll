@@ -1,50 +1,112 @@
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-import { useState } from "react";
-import { TextField, Button, Box, Typography, Paper } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  Typography,
+  Stack,
+} from '@mui/material';
 
-export default function LoginForm() {
-  const [form, setForm] = useState({ email: "", password: "" });
+const LoginForm = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [message, setMessage] = useState('');
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const { email, password } = formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    // mock login
-    console.log(form);
-    navigate("/dashboard");
+    try {
+      await login({ email, password });
+      navigate('/dashboard');
+    } catch (error) {
+      setMessage('Login failed. Please check your credentials.');
+      console.error(error);
+    }
   };
 
   return (
-    <Paper elevation={4} sx={{ p: 4, width: 350, mx: "auto", mt: 10 }}>
-      <Typography variant="h5" mb={2} textAlign="center">Login</Typography>
-      <Box component="form" onSubmit={handleSubmit}>
-        <TextField
-          label="Email"
-          name="email"
-          fullWidth
-          margin="normal"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
-        <TextField
-          label="Password"
-          name="password"
-          type="password"
-          fullWidth
-          margin="normal"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        />
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 2 }}>
-          Login
-        </Button>
-        <Button
-          fullWidth
-          variant="text"
-          sx={{ mt: 1 }}
-          onClick={() => navigate("/register")}
-        >
-          Create Account
-        </Button>
-      </Box>
-    </Paper>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#f5f6fa',
+      }}
+    >
+      <Card
+        sx={{
+          width: 400,
+          p: 3,
+          boxShadow: 3,
+          borderRadius: 3,
+        }}
+      >
+        <CardContent>
+          <Typography variant="h5" align="center" gutterBottom fontWeight="bold">
+            Login
+          </Typography>
+
+          <form onSubmit={onSubmit}>
+            <Stack spacing={3}>
+              <TextField
+                label="Email"
+                type="email"
+                name="email"
+                value={email}
+                onChange={onChange}
+                required
+                fullWidth
+              />
+              <TextField
+                label="Password"
+                type="password"
+                name="password"
+                value={password}
+                onChange={onChange}
+                required
+                fullWidth
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{ borderRadius: 2 }}
+                fullWidth
+              >
+                Login
+              </Button>
+            </Stack>
+          </form>
+
+          {message && (
+            <Typography
+              variant="body2"
+              color="error"
+              align="center"
+              sx={{ mt: 2 }}
+            >
+              {message}
+            </Typography>
+          )}
+        </CardContent>
+      </Card>
+    </Box>
   );
-}
+};
+
+export default LoginForm;

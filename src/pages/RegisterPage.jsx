@@ -1,5 +1,16 @@
-// RegisterPage.jsx
-import RegisterForm from "../components/auth/RegisterForm";
-export default function RegisterPage() {
-  return <RegisterForm />;
-}
+import React from 'react';
+import RegisterForm from '../components/auth/RegisterForm';
+import AuthNavbar from '../components/auth/AuthNavbar';
+
+const RegisterPage = () => {
+  return (
+    <>
+      <AuthNavbar />
+      <div>
+        <RegisterForm />
+      </div>
+    </>
+  );
+};
+
+export default RegisterPage;
