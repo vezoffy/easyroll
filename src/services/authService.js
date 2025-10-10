@@ -5,7 +5,6 @@ const signup = (userData) => {
 };
 
 const login = async (credentials) => {
-  // Note: The backend now expects a JSON object, not form data.
   const response = await api.post('/api/auth/signin', {
     email: credentials.email,
     password: credentials.password,
@@ -35,9 +34,11 @@ const getCurrentUser = () => {
   return null;
 };
 
-export default {
+const authService = {
   signup,
   login,
   logout,
   getCurrentUser,
 };
+
+export default authService;

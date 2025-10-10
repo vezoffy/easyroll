@@ -37,7 +37,7 @@ const RegisterForm = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await authService.register(formData);
+      await authService.signup(formData);
       setMessage('✅ Registration successful! Redirecting to login...');
       setTimeout(() => {
         navigate('/login');
